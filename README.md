@@ -21,7 +21,7 @@ A production-ready three-tier cognitive architecture for LLM memory management.
 
 \`\`\`bash
 # Clone repository
-git clone https://github.com/YOUR_USERNAME/nexusmemory-core.git
+git clone https://github.com/GarimaDixit2502/nexusmemory-core.git
 cd nexusmemory-core
 
 # Create virtual environment
@@ -61,6 +61,4 @@ python main.py
 - `POST /api/consolidate` - Force MTM → LTM consolidation
 - `GET /health` - Health check
 
-## License
 
-MIT
