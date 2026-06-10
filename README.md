@@ -61,7 +61,7 @@ python main.py
 - `POST /api/consolidate` - Force MTM → LTM consolidation
 - `GET /health` - Health check
 
-##Screenshots
+## Screenshots
 
 <img width="946" height="727" alt="Screenshot 2026-06-11 at 12 42 29 AM" src="https://github.com/user-attachments/assets/b2b0c703-8c3e-47c3-b4d8-fc2117676e6c" />
 <img width="949" height="716" alt="Screenshot 2026-06-11 at 12 42 50 AM" src="https://github.com/user-attachments/assets/3c6b46c0-5264-465d-8c4d-841cf25c2f88" />
