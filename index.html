@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusMemory Core - Three-Tier Cognitive Architecture</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
+    
+    <style>
+        * { font-family: 'DM Serif Text', serif; }
+        
+        :root {
+            --bg-cream: #EEE0CC;
+            --sage-green: #607456;
+            --terracotta: #BA6A4C;
+            --deep-maroon: #7B2525;
+            --dark-text: #2b1414;
+        }
+        
+        body {
+            background-color: var(--bg-cream);
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* LOGO - Using Inline SVG as Fallback */
+        .brain-logo {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            margin-right: 2rem;
+            object-fit: contain;
+        }
+        
+        .brain-logo-small {
+            display: inline-block;
+            width: 70px;
+            height: 70px;
+            margin-right: 1.25rem;
+            object-fit: contain;
+        }
+        
+        /* LANDING PAGE */
+        #landingPage {
+            background-color: var(--bg-cream);
+            min-height: 100vh;
+            padding: 4rem 2rem;
+        }
+        
+        .hero-title {
+            font-size: 5.5rem;
+            font-weight: 700;
+            color: var(--deep-maroon);
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            text-align: center;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.75rem;
+            color: var(--sage-green);
+            line-height: 1.6;
+            font-style: italic;
+            text-align: center;
+            max-width: 56rem;
+            margin: 0 auto 4rem;
+        }
+        
+        .description-text {
+            font-size: 1.25rem;
+            line-height: 1.9;
+            color: var(--dark-text);
+            text-align: center;
+            max-width: 50rem;
+            margin: 0 auto 5rem;
+        }
+        
+        .section-heading {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--deep-maroon);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .layer-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(96, 116, 86, 0.25);
+            border-radius: 1.75rem;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.35s ease;
+        }
+        
+        .layer-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 32px rgba(123, 37, 37, 0.2);
+            border-color: rgba(96, 116, 86, 0.5);
+        }
+        
+        .layer-number {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--terracotta);
+            line-height: 1;
+        }
+        
+        .layer-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--deep-maroon);
+            margin-bottom: 1rem;
+        }
+        
+        .layer-description {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: var(--dark-text);
+        }
+        
+        .result-box {
+            background: rgba(186, 106, 76, 0.12);
+            border: 3px solid var(--terracotta);
+            border-radius: 1.75rem;
+            padding: 3rem;
+            margin-bottom: 4rem;
+        }
+        
+        .result-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--deep-maroon);
+            margin-bottom: 1.5rem;
+        }
+        
+        .result-text {
+            font-size: 1.25rem;
+            line-height: 1.9;
+            color: var(--dark-text);
+        }
+        
+        /* FLOWCHART - MATCHING REFERENCE IMAGE */
+        .flowchart-section {
+            background: rgba(255, 255, 255, 0.8);
+            border: 3px solid rgba(96, 116, 86, 0.3);
+            border-radius: 2rem;
+            padding: 3.5rem 2.5rem;
+            margin: 0 auto 5rem;
+            max-width: 75rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+        
+        .flowchart-heading {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--deep-maroon);
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+        
+        .flowchart-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2.5px solid #cbd5e1;
+            border-radius: 1.25rem;
+            padding: 1.75rem 1.5rem;
+            min-width: 180px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .flow-step-title {
+            font-size: 1.0625rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 0.375rem;
+        }
+        
+        .flow-step-subtitle {
+            font-size: 0.8125rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+        
+        .flow-arrow {
+            width: 50px;
+            height: 3px;
+            background: var(--terracotta);
+            position: relative;
+            margin: 0 -1px;
+        }
+        
+        .flow-arrow::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid var(--terracotta);
+            border-top: 7px solid transparent;
+            border-bottom: 7px solid transparent;
+        }
+        
+        .btn-cta {
+            background: var(--terracotta);
+            color: var(--bg-cream);
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 1.5rem 4.5rem;
+            border-radius: 4rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(186, 106, 76, 0.35);
+        }
+        
+        .btn-cta:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 32px rgba(186, 106, 76, 0.45);
+            background: #a85a3c;
+        }
+        
+        /* DASHBOARD */
+        #dashboard {
+            background-color: var(--bg-cream);
+            display: none;
+            min-height: 100vh;
+        }
+        
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 3px solid rgba(96, 116, 86, 0.25);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+        
+        .back-link {
+            color: var(--deep-maroon);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--sage-green);
+        }
+        
+        .premium-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            border: 2px solid rgba(96, 116, 86, 0.2);
+            padding: 3rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        
+        .premium-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-3px);
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.75);
+            border-radius: 1.75rem;
+            padding: 2.25rem;
+            border: 3px solid;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+        }
+        
+        .metric-stm { 
+            border-color: var(--deep-maroon);
+            background: linear-gradient(135deg, rgba(123, 37, 37, 0.08) 0%, rgba(123, 37, 37, 0.04) 100%);
+        }
+        .metric-mtm { 
+            border-color: var(--sage-green);
+            background: linear-gradient(135deg, rgba(96, 116, 86, 0.08) 0%, rgba(96, 116, 86, 0.04) 100%);
+        }
+        .metric-ltm-nodes { 
+            border-color: var(--terracotta);
+            background: linear-gradient(135deg, rgba(186, 106, 76, 0.08) 0%, rgba(186, 106, 76, 0.04) 100%);
+        }
+        .metric-ltm-edges { 
+            border-color: var(--sage-green);
+            background: linear-gradient(135deg, rgba(96, 116, 86, 0.08) 0%, rgba(96, 116, 86, 0.04) 100%);
+        }
+        
+        .btn-primary {
+            background: var(--terracotta);
+            color: var(--bg-cream);
+            font-weight: 700;
+            padding: 1.25rem 2.5rem;
+            border-radius: 1.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(186, 106, 76, 0.3);
+            font-size: 1.125rem;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: #a85a3c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(186, 106, 76, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--sage-green);
+            font-weight: 700;
+            padding: 1.25rem 2.5rem;
+            border-radius: 1.5rem;
+            border: 3px solid var(--sage-green);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-size: 1.125rem;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(96, 116, 86, 0.1);
+            border-color: #4a5a42;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .premium-input {
+            border: 3px solid rgba(96, 116, 86, 0.3);
+            border-radius: 1.5rem;
+            padding: 1.5rem 2rem;
+            width: 100%;
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--dark-text);
+            font-size: 1.125rem;
+        }
+        
+        .premium-input::placeholder {
+            color: rgba(43, 20, 20, 0.5);
+        }
+        
+        .premium-input:focus {
+            outline: none;
+            border-color: var(--sage-green);
+            box-shadow: 0 0 0 4px rgba(96, 116, 86, 0.15);
+            background: white;
+        }
+        
+        .tier-badge {
+            padding: 0.75rem 1.25rem;
+            border-radius: 1rem;
+            font-size: 0.9375rem;
+            font-weight: 700;
+            border: 2.5px solid;
+        }
+        
+        .stm-badge { 
+            background: rgba(123, 37, 37, 0.1);
+            color: var(--deep-maroon);
+            border-color: var(--deep-maroon);
+        }
+        .mtm-badge { 
+            background: rgba(96, 116, 86, 0.1);
+            color: var(--sage-green);
+            border-color: var(--sage-green);
+        }
+        .ltm-badge { 
+            background: rgba(186, 106, 76, 0.1);
+            color: var(--terracotta);
+            border-color: var(--terracotta);
+        }
+        
+        #graphContainer {
+            position: relative;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 2rem;
+            overflow: hidden;
+            border: 3px solid var(--sage-green);
+            height: 800px;
+            width: 100%;
+        }
+        
+        #graphSvg { width: 100%; height: 100%; }
+        
+        .graph-controls {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(238, 224, 204, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1.25rem;
+            padding: 0.875rem;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+            display: flex;
+            gap: 0.875rem;
+            z-index: 10;
+        }
+        
+        .graph-control-btn {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 1rem;
+            border: 2px solid var(--sage-green);
+            background: white;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--sage-green);
+            transition: all 0.2s ease;
+        }
+        
+        .graph-control-btn:hover {
+            background: var(--sage-green);
+            color: white;
+            transform: scale(1.12);
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 1.125rem;
+            height: 1.125rem;
+            border: 2.5px solid rgba(238, 224, 204, 0.3);
+            border-top-color: var(--bg-cream);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-right: 0.75rem;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .result-item {
+            padding: 1.75rem;
+            margin: 1.25rem 0;
+            border-radius: 1.5rem;
+            border-left: 5px solid;
+            transition: all 0.25s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .result-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stm-result { border-color: var(--deep-maroon); }
+        .mtm-result { border-color: var(--sage-green); }
+        .ltm-result { border-color: var(--terracotta); }
+        
+        .pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        
+        .fade-in { animation: fadeIn 0.9s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .compact-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.625rem 0;
+            border-bottom: 1px solid rgba(96, 116, 86, 0.12);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- LANDING PAGE -->
+    <div id="landingPage">
+        <div class="max-w-6xl mx-auto">
+            
+            <!-- Hero with Logo Image -->
+            <div class="mb-20">
+                <h1 class="hero-title">
+                    <img src="nexuslogo.png" alt="NexusMemory Core Logo" class="brain-logo">
+                    NexusMemory Core
+                </h1>
+                <p class="hero-subtitle">
+                    A Three-Tier Cognitive Architecture for Asynchronous Vector and Graph-Driven LLM Memory.
+                </p>
+            </div>
+            
+            <!-- Product Description -->
+            <div class="mb-20">
+                <p class="description-text">
+                    Large Language Models (LLMs) are incredibly smart, but they suffer from short-term memory limits—they forget past context, get confused during long conversations, and hallucinate facts. <strong>NexusMemory Core</strong> acts as an external, permanent brain for AI models. It mimics human biology by organizing information into three distinct layers, ensuring your AI applications remember every document, conversation, and relationship perfectly over time.
+                </p>
+            </div>
+            
+            <!-- How It Works -->
+            <div class="mb-16">
+                <h2 class="section-heading">How It Works: The 3-Layer Brain</h2>
+                
+                <p style="font-size: 1.25rem; line-height: 1.9; color: var(--dark-text); text-align: center; margin-bottom: 4rem; max-width: 50rem; margin-left: auto; margin-right: auto;">
+                    Instead of dumping data into a basic flat database, NexusMemory Core processes and filters information through a dynamic pipeline:
+                </p>
+                
+                <div class="layer-card">
+                    <div class="flex items-start gap-8">
+                        <div class="layer-number">1</div>
+                        <div class="flex-1">
+                            <h3 class="layer-title">Short-Term Buffer (Immediate Awareness)</h3>
+                            <p class="layer-description">
+                                Captures raw, incoming streams of data or user queries instantly. It handles real-time information processing through a lightning-fast data queue.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer-card">
+                    <div class="flex items-start gap-8">
+                        <div class="layer-number">2</div>
+                        <div class="flex-1">
+                            <h3 class="layer-title">Mid-Term Episodic Memory (Contextual Vector Space)</h3>
+                            <p class="layer-description">
+                                Converts your data into multi-dimensional vectors. When you ask a question, a custom scoring system ranks past events by balancing how relevant they are, how recently you mentioned them, and how often they are accessed.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer-card">
+                    <div class="flex items-start gap-8">
+                        <div class="layer-number">3</div>
+                        <div class="flex-1">
+                            <h3 class="layer-title">Long-Term Semantic Graph (The Knowledge Network)</h3>
+                            <p class="layer-description">
+                                An asynchronous background worker automatically distills aging memories into an interconnected knowledge web. It maps out how different entities and ideas relate to one another, unlocking complex reasoning capabilities for your AI.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- The Result -->
+            <div class="result-box max-w-4xl mx-auto">
+                <div class="result-title">The Result</div>
+                <p class="result-text">
+                    When an AI app queries NexusMemory Core, it receives a perfectly synthesized context block pulled from across all three layers in milliseconds. Your AI stays deeply grounded, hyper-accurate, and entirely immune to forgetfulness.
+                </p>
+            </div>
+            
+            <!-- FLOWCHART - MATCHING REFERENCE IMAGE -->
+            <div class="flowchart-section">
+                <h3 class="flowchart-heading">How Your Input Is Processed</h3>
+                
+                <div class="flowchart-row">
+                    <div class="flow-step">
+                        <div class="flow-step-title">RAW INPUT TEXT</div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="flow-step">
+                        <div class="flow-step-title">STM BUFFER</div>
+                        <div class="flow-step-subtitle">(FIFO)</div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="flow-step">
+                        <div class="flow-step-title">MTM EPISODIC</div>
+                        <div class="flow-step-subtitle">(VECTORS)</div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="flow-step">
+                        <div class="flow-step-title">LTM SEMANTIC</div>
+                        <div class="flow-step-subtitle">(GRAPH)</div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="flow-step">
+                        <div class="flow-step-title">SYNTHESIZED</div>
+                        <div class="flow-step-title">CONTEXT OUTPUT</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTA -->
+            <div class="text-center">
+                <button onclick="enterDashboard()" class="btn-cta">Try Now</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DASHBOARD -->
+    <div id="dashboard">
+        
+        <header class="dashboard-header">
+            <div class="container mx-auto px-6 py-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <img src="nexuslogo.png" alt="NexusMemory Core Logo" class="brain-logo-small">
+                        <div>
+                            <a href="#" onclick="returnToLanding(event)" class="back-link">
+                                <h1 style="font-size: 2.25rem; font-weight: 700;">NexusMemory Core</h1>
+                            </a>
+                            <p style="color: var(--sage-green); font-size: 0.9375rem; margin-top: 0.375rem;">Three-Tier Cognitive Architecture</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2" style="font-size: 0.8125rem; color: var(--sage-green);">
+                        <div class="w-2.5 h-2.5 rounded-full animate-pulse" style="background-color: var(--sage-green);"></div>
+                        <span style="font-weight: 700;">System Active</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container mx-auto px-6 py-10" style="max-width: 1400px;">
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                <div class="metric-card metric-stm">
+                    <div style="font-size: 0.8125rem; font-weight: 700; color: var(--deep-maroon); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">Short-Term</div>
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--deep-maroon);" id="stm-count">0</div>
+                    <div style="font-size: 0.8125rem; color: var(--deep-maroon); margin-top: 0.75rem; opacity: 0.7;">Working Memory</div>
+                </div>
+                
+                <div class="metric-card metric-mtm">
+                    <div style="font-size: 0.8125rem; font-weight: 700; color: var(--sage-green); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">Mid-Term</div>
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--sage-green);" id="mtm-count">0</div>
+                    <div style="font-size: 0.8125rem; color: var(--sage-green); margin-top: 0.75rem; opacity: 0.7;">Episodic Memory</div>
+                </div>
+                
+                <div class="metric-card metric-ltm-nodes">
+                    <div style="font-size: 0.8125rem; font-weight: 700; color: var(--terracotta); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">LTM Nodes</div>
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--terracotta);" id="ltm-nodes-count">0</div>
+                    <div style="font-size: 0.8125rem; color: var(--terracotta); margin-top: 0.75rem; opacity: 0.7;">Entities</div>
+                </div>
+                
+                <div class="metric-card metric-ltm-edges">
+                    <div style="font-size: 0.8125rem; font-weight: 700; color: var(--sage-green); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">LTM Edges</div>
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--sage-green);" id="ltm-edges-count">0</div>
+                    <div style="font-size: 0.8125rem; color: var(--sage-green); margin-top: 0.75rem; opacity: 0.7;">Relationships</div>
+                </div>
+            </div>
+
+            <div style="max-width: 1200px; margin: 0 auto;">
+                
+                <div class="premium-card">
+                    <h2 style="font-size: 2rem; font-weight: 700; color: var(--deep-maroon); margin-bottom: 1rem;">Ingest Content</h2>
+                    <p style="font-size: 1.125rem; color: var(--sage-green); margin-bottom: 2rem;">Add new information to the memory system</p>
+                    <textarea id="ingestText" rows="5" class="premium-input resize-none" placeholder="Enter text to add to memory..."></textarea>
+                    <button onclick="ingestContent()" id="ingestBtn" class="btn-primary" style="margin-top: 2rem;">
+                        <span id="ingestBtnText">Add to Memory</span>
+                    </button>
+                    <div id="ingestStatus" style="margin-top: 1.5rem; font-size: 1.0625rem; font-weight: 700;"></div>
+                </div>
+                
+                <div class="premium-card">
+                    <h2 style="font-size: 2rem; font-weight: 700; color: var(--deep-maroon); margin-bottom: 1rem;">Consolidation Control</h2>
+                    <p style="font-size: 1.125rem; color: var(--sage-green); margin-bottom: 2rem;">Force MTM to LTM semantic graph update</p>
+                    <button onclick="forceConsolidation()" id="consolidateBtn" class="btn-secondary">
+                        <span id="consolidateBtnText">Force Consolidate Now</span>
+                    </button>
+                    <div id="consolidateStatus" style="margin-top: 1.5rem; font-size: 1.0625rem; font-weight: 700;"></div>
+                </div>
+                
+                <div class="premium-card">
+                    <div class="flex justify-between items-center" style="margin-bottom: 2rem;">
+                        <div>
+                            <h2 style="font-size: 2rem; font-weight: 700; color: var(--deep-maroon);">Semantic Knowledge Graph</h2>
+                            <p style="font-size: 1.125rem; color: var(--sage-green); margin-top: 0.5rem;">Entity-relationship network visualization</p>
+                        </div>
+                        <button onclick="refreshGraph()" style="background: white; color: var(--sage-green); font-weight: 700; font-size: 1.0625rem; padding: 1rem 2rem; border-radius: 1.25rem; border: 3px solid var(--sage-green); cursor: pointer; transition: all 0.2s ease;">
+                            Refresh Graph
+                        </button>
+                    </div>
+                    <div id="graphContainer">
+                        <svg id="graphSvg"></svg>
+                        <div class="graph-controls">
+                            <button class="graph-control-btn" onclick="zoomIn()">+</button>
+                            <button class="graph-control-btn" onclick="zoomOut()">−</button>
+                            <button class="graph-control-btn" onclick="resetZoom()">⟲</button>
+                        </div>
+                    </div>
+                    <div id="graphStats" style="margin-top: 2rem; font-size: 1.0625rem; color: var(--sage-green); text-align: center; font-weight: 700;"></div>
+                </div>
+                
+                <div class="premium-card">
+                    <h2 style="font-size: 2rem; font-weight: 700; color: var(--deep-maroon); margin-bottom: 1rem;">Query Memory</h2>
+                    <p style="font-size: 1.125rem; color: var(--sage-green); margin-bottom: 2rem;">Search across all memory tiers</p>
+                    <input id="queryText" type="text" class="premium-input" placeholder="Ask a question...">
+                    <div class="flex gap-5 justify-center" style="margin-top: 1.75rem;">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="enableSTM" checked class="mr-3 w-5 h-5">
+                            <span class="tier-badge stm-badge">STM</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="enableMTM" checked class="mr-3 w-5 h-5">
+                            <span class="tier-badge mtm-badge">MTM</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="enableLTM" checked class="mr-3 w-5 h-5">
+                            <span class="tier-badge ltm-badge">LTM</span>
+                        </label>
+                    </div>
+                    <button onclick="queryMemory()" id="queryBtn" class="btn-primary" style="margin-top: 2rem;">
+                        <span id="queryBtnText">Search Memory</span>
+                    </button>
+                    <div id="queryResults" style="margin-top: 2rem;"></div>
+                </div>
+                
+                <div class="premium-card" style="padding: 2rem; margin-bottom: 4rem;">
+                    <h2 style="font-size: 1.75rem; font-weight: 700; color: var(--deep-maroon); margin-bottom: 1.5rem;">System Statistics</h2>
+                    <div style="font-size: 0.9375rem;">
+                        <div class="compact-stat-row">
+                            <span style="color: var(--dark-text); font-weight: 600;">Total Packets Processed</span>
+                            <span style="font-weight: 700; color: var(--deep-maroon); font-size: 1.25rem;" id="total-processed">0</span>
+                        </div>
+                        <div class="compact-stat-row">
+                            <span style="color: var(--dark-text); font-weight: 600;">Consolidations Performed</span>
+                            <span style="font-weight: 700; color: var(--deep-maroon); font-size: 1.25rem;" id="consolidations">0</span>
+                        </div>
+                        <div class="compact-stat-row">
+                            <span style="color: var(--dark-text); font-weight: 600;">LLM Extractions</span>
+                            <span style="font-weight: 700; color: var(--sage-green); font-size: 1.25rem;" id="llm-extractions">0</span>
+                        </div>
+                        <div class="compact-stat-row">
+                            <span style="color: var(--dark-text); font-weight: 600;">Heuristic Extractions</span>
+                            <span style="font-weight: 700; color: var(--terracotta); font-size: 1.25rem;" id="heuristic-extractions">0</span>
+                        </div>
+                        <div class="compact-stat-row" style="border-bottom: none;">
+                            <span style="color: var(--dark-text); font-weight: 600;">Extraction Method</span>
+                            <span style="font-weight: 700; color: var(--sage-green); font-size: 1.0625rem;" id="extraction-method">N/A</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let svg, g, simulation, zoom;
+        
+        function enterDashboard() {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('dashboard').classList.add('fade-in');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            initializeGraph();
+            updateMetrics();
+            setInterval(updateMetrics, 2000);
+            setTimeout(refreshGraph, 1000);
+        }
+        
+        function returnToLanding(event) {
+            event.preventDefault();
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('landingPage').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function initializeGraph() {
+            const container = document.getElementById("graphContainer");
+            if (!container) return;
+            const width = container.clientWidth;
+            const height = 800;
+            svg = d3.select("#graphSvg").attr("width", width).attr("height", height);
+            zoom = d3.zoom().scaleExtent([0.3, 3]).on("zoom", (e) => g.attr("transform", e.transform));
+            svg.call(zoom);
+            g = svg.append("g");
+        }
+        
+        async function refreshGraph() {
+            const statsDiv = document.getElementById('graphStats');
+            if (!statsDiv) return;
+            statsDiv.innerHTML = '<span class="pulse">Loading...</span>';
+            try {
+                const response = await fetch(`${API_BASE}/api/graph`);
+                const graphData = await response.json();
+                if (!graphData.nodes || graphData.nodes.length === 0) {
+                    statsDiv.innerHTML = 'No graph data. Ingest → Consolidate → Refresh';
+                    clearGraph();
+                    return;
+                }
+                statsDiv.innerHTML = `${graphData.nodes.length} entities · ${graphData.links.length} relationships`;
+                renderGraph(graphData);
+            } catch (error) {
+                statsDiv.innerHTML = `Error: ${error.message}`;
+            }
+        }
+        
+        function renderGraph(graphData) {
+            g.selectAll("*").remove();
+            const container = document.getElementById("graphContainer");
+            const width = container.clientWidth;
+            const height = 800;
+            const colorScale = d3.scaleOrdinal().range(['#c084fc', '#60a5fa', '#34d399', '#fbbf24', '#fb923c']);
+            const nodes = graphData.nodes.map(d => ({...d}));
+            const nodeById = new Map(nodes.map(d => [d.id, d]));
+            const links = graphData.links.map(d => ({source: nodeById.get(d.source), target: nodeById.get(d.target), relation: d.relation, weight: d.weight})).filter(d => d.source && d.target);
+            simulation = d3.forceSimulation(nodes).force('link', d3.forceLink(links).id(d => d.id).distance(180).strength(0.5)).force('charge', d3.forceManyBody().strength(-500).distanceMax(400)).force('center', d3.forceCenter(width / 2, height / 2)).force('collision', d3.forceCollide().radius(60)).force('x', d3.forceX(width / 2).strength(0.05)).force('y', d3.forceY(height / 2).strength(0.05)).alphaDecay(0.02);
+            const link = g.append("g").selectAll("line").data(links).join("line").attr("stroke", "#64748b").attr("stroke-width", d => Math.sqrt(d.weight) * 2.5).attr("stroke-opacity", 0.5);
+            const linkLabel = g.append("g").selectAll("text").data(links).join("text").attr("font-size", "12px").attr("fill", "#94a3b8").attr("text-anchor", "middle").attr("dy", -7).attr("font-weight", "700").text(d => d.relation.replace(/_/g, ' '));
+            const node = g.append("g").selectAll("g").data(nodes).join("g");
+            node.append("circle").attr("r", 18).attr("fill", d => colorScale(d.group)).attr("stroke", "#ffffff").attr("stroke-width", 4);
+            node.append("text").attr("dy", -28).attr("text-anchor", "middle").attr("font-size", "14px").attr("font-weight", "700").attr("fill", "#f1f5f9").attr("stroke", "#1e293b").attr("stroke-width", "4").attr("paint-order", "stroke").text(d => { const label = d.label || d.id; return label.length > 22 ? label.substring(0, 20) + '...' : label; });
+            node.append("title").text(d => `${d.label || d.id}\nType: ${d.type}`);
+            simulation.on("tick", () => { link.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y); linkLabel.attr("x", d => (d.source.x + d.target.x) / 2).attr("y", d => (d.source.y + d.target.y) / 2); node.attr("transform", d => `translate(${d.x},${d.y})`); });
+            setTimeout(() => simulation.stop(), 3000);
+        }
+        
+        function clearGraph() { if (g) g.selectAll("*").remove(); }
+        function zoomIn() { svg.transition().duration(300).call(zoom.scaleBy, 1.3); }
+        function zoomOut() { svg.transition().duration(300).call(zoom.scaleBy, 0.7); }
+        function resetZoom() { svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity); }
+        
+        async function ingestContent() {
+            const text = document.getElementById('ingestText').value.trim();
+            const statusDiv = document.getElementById('ingestStatus');
+            const btn = document.getElementById('ingestBtn');
+            const btnText = document.getElementById('ingestBtnText');
+            if (!text) { statusDiv.innerHTML = '<span style="color: #dc2626;">⚠ Enter text</span>'; return; }
+            btn.disabled = true; btnText.innerHTML = '<span class="loading-spinner"></span>Adding...';
+            try {
+                const r = await fetch(`${API_BASE}/api/ingest`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content: text }) });
+                const d = await r.json();
+                if (d.success) { statusDiv.innerHTML = '<span style="color: var(--sage-green);">✓ Successfully added!</span>'; document.getElementById('ingestText').value = ''; await updateMetrics(); }
+            } catch (e) { statusDiv.innerHTML = `<span style="color: #dc2626;">✗ ${e.message}</span>`; }
+            finally { btn.disabled = false; btnText.textContent = 'Add to Memory'; }
+        }
+        
+        async function queryMemory() {
+            const query = document.getElementById('queryText').value.trim();
+            const resultsDiv = document.getElementById('queryResults');
+            const btn = document.getElementById('queryBtn');
+            const btnText = document.getElementById('queryBtnText');
+            if (!query) { resultsDiv.innerHTML = '<span style="color: #dc2626;">⚠ Enter query</span>'; return; }
+            btn.disabled = true; btnText.innerHTML = '<span class="loading-spinner"></span>Searching...';
+            try {
+                const r = await fetch(`${API_BASE}/api/query`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query, stm_enabled: document.getElementById('enableSTM').checked, mtm_enabled: document.getElementById('enableMTM').checked, ltm_enabled: document.getElementById('enableLTM').checked, mtm_top_k: 5, mtm_threshold: 0.3, ltm_max_hops: 2 }) });
+                const data = await r.json();
+                let html = '<div class="space-y-5" style="margin-top: 1.5rem;">';
+                const total = data.stm_results.length + data.mtm_results.length + data.ltm_results.length;
+                html += `<div style="background: rgba(96, 116, 86, 0.1); padding: 1.75rem; border-radius: 1.5rem; border: 2px solid rgba(96, 116, 86, 0.25);"><div style="font-size: 1.125rem; font-weight: 700; color: var(--deep-maroon);">Query: "${query}"</div><div style="font-size: 0.9375rem; color: var(--sage-green); margin-top: 0.75rem;">${total} results in ${data.metrics.latency_ms.toFixed(1)}ms</div></div>`;
+                if (data.stm_results.length > 0) { html += '<div><div style="font-size: 0.9375rem; font-weight: 700; color: var(--deep-maroon); text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 0.05em;">Short-Term Memory</div>'; data.stm_results.forEach(r => { html += `<div class="result-item stm-result" style="font-size: 1.0625rem; color: var(--dark-text); line-height: 1.8;">${r.content}</div>`; }); html += '</div>'; }
+                if (data.mtm_results.length > 0) { html += '<div><div style="font-size: 0.9375rem; font-weight: 700; color: var(--sage-green); text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 0.05em;">Mid-Term Memory</div>'; data.mtm_results.forEach(r => { html += `<div class="result-item mtm-result"><span style="font-weight: 700; color: var(--sage-green); font-size: 0.9375rem; margin-right: 1rem;">${r.score.toFixed(3)}</span><span style="font-size: 1.0625rem; color: var(--dark-text); line-height: 1.8;">${r.content}</span></div>`; }); html += '</div>'; }
+                if (data.ltm_results.length > 0) { html += '<div><div style="font-size: 0.9375rem; font-weight: 700; color: var(--terracotta); text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 0.05em;">Long-Term Memory</div>'; data.ltm_results.forEach(r => { html += `<div class="result-item ltm-result" style="font-size: 0.9375rem; color: var(--dark-text); font-family: monospace; line-height: 1.6;">${r.triplet}</div>`; }); html += '</div>'; }
+                html += '</div>'; resultsDiv.innerHTML = html;
+            } catch (e) { resultsDiv.innerHTML = `<span style="color: #dc2626;">✗ ${e.message}</span>`; }
+            finally { btn.disabled = false; btnText.textContent = 'Search Memory'; }
+        }
+        
+        async function updateMetrics() {
+            try {
+                const r = await fetch(`${API_BASE}/api/metrics`);
+                const d = await r.json();
+                document.getElementById('stm-count').textContent = d.short_term_size;
+                document.getElementById('mtm-count').textContent = d.mid_term_size;
+                document.getElementById('ltm-nodes-count').textContent = d.long_term_nodes;
+                document.getElementById('ltm-edges-count').textContent = d.long_term_edges;
+                document.getElementById('total-processed').textContent = d.total_packets_processed;
+                document.getElementById('consolidations').textContent = d.consolidations_performed;
+                document.getElementById('llm-extractions').textContent = d.llm_extractions;
+                document.getElementById('heuristic-extractions').textContent = d.heuristic_extractions;
+                document.getElementById('extraction-method').textContent = d.extraction_statistics.model || 'Heuristic';
+            } catch (e) { console.error('Metrics error:', e); }
+        }
+        
+        async function forceConsolidation() {
+            const statusDiv = document.getElementById('consolidateStatus');
+            const btn = document.getElementById('consolidateBtn');
+            const btnText = document.getElementById('consolidateBtnText');
+            btn.disabled = true; btnText.innerHTML = '<span class="loading-spinner"></span>Consolidating...';
+            try {
+                const r = await fetch(`${API_BASE}/api/consolidate`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+                const d = await r.json();
+                if (d.success) { statusDiv.innerHTML = `<span style="color: var(--sage-green);">✓ ${d.message}</span>`; await updateMetrics(); setTimeout(refreshGraph, 1000); }
+            } catch (e) { statusDiv.innerHTML = `<span style="color: #dc2626;">✗ ${e.message}</span>`; }
+            finally { btn.disabled = false; btnText.textContent = 'Force Consolidate Now'; }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const ingestText = document.getElementById('ingestText');
+            const queryText = document.getElementById('queryText');
+            if (ingestText) { ingestText.addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); ingestContent(); } }); }
+            if (queryText) { queryText.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); queryMemory(); } }); }
+        });
+    </script>
+</body>
+</html>
