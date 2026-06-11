@@ -70,5 +70,3 @@ python main.py
 <img width="949" height="709" alt="Screenshot 2026-06-11 at 12 43 36 AM" src="https://github.com/user-attachments/assets/4d976e43-4077-4146-bf20-18d4e011079e" />
 <img width="946" height="713" alt="Screenshot 2026-06-11 at 12 44 00 AM" src="https://github.com/user-attachments/assets/17284750-794c-4ac5-b86b-171f0ecac5fc" />
 <img width="946" height="710" alt="Screenshot 2026-06-11 at 12 44 32 AM" src="https://github.com/user-attachments/assets/85327833-55b8-4f3e-9e61-7d1b6ab463ff" />
-
-
